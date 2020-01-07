@@ -21,11 +21,11 @@
     </div>
     <div class="nav">
       <ul>
-        <li><a href="./user.html"><i class="glyphicon glyphicon-user"></i><span>用户管理</span></a></li>
+        <li><a href="./user.html" class="current"><i class="glyphicon glyphicon-user"></i><span>用户管理</span></a></li>
         <li>
           <a href="javascript:;"><i class="glyphicon glyphicon-list"></i><span>分类管理</span></a>
           <div class="category" style="display: none;">
-            <a href="./firstCategory.html">一级分类</a>
+            <a href="./firstCategory.html" class="current">一级分类</a>
             <a href="./twoCategory.html">二级分类</a>
           </div>
         </li>
@@ -36,15 +36,16 @@
   <div class="lt_main">
     <div class="topbar">
       <a href="#" class="pull-left icon_menu"><i class="glyphicon glyphicon-align-justify"></i></a>
-      <a href="#" class="pull-right icon_logout" data-toggle="modal"><i class="glyphicon glyphicon-log-out"></i></a>
+      <a href="#" class="pull-right icon_logout"><i class="glyphicon glyphicon-log-out"></i></a>
     </div>
     <div class="container-fluid">
-      <ol class="breadcrumb">
+      <ol class="breadcrumb">  
         <li><a href="./index.html">管理系统</a></li>
-        <li class="active"><a href="javascript:;">首页</a></li>
+        <li class="active"><a href="javascript:;">用户管理</a></li>
       </ol>
     </div>
   </div>
+
   <!-- 登录退出的模态框,  配置 data-dismiss="modal" 可以关闭模态框 -->
   <div class="modal fade" id="logoutModal">
     <div class="modal-dialog modal-sm">
