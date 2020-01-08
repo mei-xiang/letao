@@ -97,6 +97,7 @@ a:hover{
   background-color: #3C8DBC;
   padding-left: 180px;
   transition: all 1s;
+  z-index: 5;
 }
 .topbar.now{
   padding-left: 0;
