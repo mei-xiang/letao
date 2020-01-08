@@ -41,9 +41,6 @@ $(function () {
   })
 
   // 3.点击退出按钮，进行跳转登录页
-  $(".icon_logout").on("click", function () {
-
-  })
   $('.icon_logout').click(function () {
     // 让模态框显示
     $('#logoutModal').modal("show");

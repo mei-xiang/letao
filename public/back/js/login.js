@@ -48,6 +48,7 @@ $(function () {
       }
     }
   })
+  // 校验完成后的回调函数
   $("#form").on('success.form.bv', function (e) {
     e.preventDefault();
 
