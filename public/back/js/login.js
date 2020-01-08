@@ -72,4 +72,10 @@ $(function () {
       }
     })
   });
+
+  // 表单重置功能
+  $(".btn-reset").on("click",function(){
+    // 调用插件的表单重置方法
+    $("#form").data("bootstrapValidator").resetForm(true);
+  })
 })

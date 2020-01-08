@@ -118,3 +118,10 @@ a:hover{
 .breadcrumb li.active a{
   color: #777;
 }
+
+/* 用户管理 */
+.table.table-bordered th,
+.table.table-bordered td{
+  vertical-align: middle;
+  text-align: center;
+}

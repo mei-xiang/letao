@@ -39,10 +39,26 @@
       <a href="#" class="pull-right icon_logout"><i class="glyphicon glyphicon-log-out"></i></a>
     </div>
     <div class="container-fluid">
-      <ol class="breadcrumb">  
+      <ol class="breadcrumb">
         <li><a href="./index.html">管理系统</a></li>
         <li class="active"><a href="javascript:;">用户管理</a></li>
       </ol>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>用户名</th>
+            <th>手机号</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 模板引擎渲染 -->
+        </tbody>
+      </table>
+      <!-- 分页 -->
+      <ul id="page"></ul>
     </div>
   </div>
 
@@ -65,11 +81,50 @@
     </div>
   </div>
 
+  <div class="modal fade" tabindex="-1" role="dialog" id="statusModal">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">温馨提示</h4>
+        </div>
+        <div class="modal-body">
+          <p style="color: #A94442;"><i class="glyphicon glyphicon-info-sign"></i>你确定要执行此操作吗？</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="statusBtn">确认</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <script type="text/html" id="tpl">
+    {{each rows}}
+    <tr>				
+      <td>{{$index + 1 + size*(page-1)}}</td>
+      <td>{{$value.username}}</td>
+      <td>{{$value.mobile}}</td>
+      <td>{{$value.isDelete===1?"正常":"禁用"}}</td>
+      <td data-id="{{$value.id}}">
+        {{if($value.isDelete===1)}}
+        <button class="btn btn-danger">禁用</button>
+        {{else if $value.isDelete===0}}
+        <button class="btn btn-success">启用</button>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </script>
+
   <script src="./lib/jquery/jquery.min.js"></script>
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="./lib/nprogress/nprogress.js"></script>
+  <script src="./lib/artTemplate/template-web.js"></script>
+  <script src="./lib/bootstrap-paginator/bootstrap-paginator.min.js"></script>
   <script src="./js/common.js"></script>
-  <script src="./js/index.js"></script>
+  <script src="./js/user.js"></script>
 </body>
 
 </html>

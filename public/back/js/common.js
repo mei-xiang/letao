@@ -14,9 +14,8 @@ $(function () {
       url: "/employee/checkRootLogin",
       type: "get",
       success: function (info) {
-        console.log(info)
         if (info.success) {
-          console.log("登陆了");
+          // console.log("登陆了");
           // 啥也不用干
         }
 
