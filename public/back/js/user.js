@@ -44,7 +44,7 @@ $(function () {
   $("tbody").on("click", ".btn", function () {
     $("#statusModal").modal("show");
     id = $(this).parent("td").data("id");
-    isDelete = $(this).hasClass("btn-danger") ? 0 : 1;
+    isDelete = $(this).hasClass("btn-danger") ? "0" : "1";
     console.log(id,isDelete);
   })
 
