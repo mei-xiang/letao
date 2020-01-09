@@ -60,7 +60,7 @@ $(function () {
       success: function (res) {
         if (res.success) {
           // 登录成功，跳到首页
-          window.location.href = "index.html"
+          window.location.href = "./index.html"
         }
         if (res.error === 1000){
           // 调用表单校验插件的实例方法
