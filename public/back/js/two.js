@@ -66,14 +66,6 @@ $(function () {
 
   // 4.图片上传
   $("#fileupload").fileupload({
-    dataType: "json",
-    //e：事件对象
-    //data：图片上传后的对象，通过data.result.picAddr可以获取上传后的图片地址
-    done: function (e, data) {
-      console.log(data);
-    }
-  });
-  $("#fileupload").fileupload({
     dataType: 'json',
     // e: 事件对象
     // data: 图片上传后返回的对象

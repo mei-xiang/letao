@@ -8,6 +8,7 @@
   <title>乐淘电商</title>
   <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="./lib/nprogress/nprogress.css">
+  <link rel="stylesheet" href="./lib/bootstrap-validator/css/bootstrapValidator.min.css">
   <link rel="stylesheet" href="./css/common.css">
   <link rel="stylesheet" href="./css/index.css">
 </head>
@@ -43,32 +44,129 @@
         <li><a href="./index.html">管理系统</a></li>
         <li class="active"><a href="javascript:;">商品管理</a></li>
       </ol>
+      <div class="lt-content">
+        <button class="btn btn-default btn-product" style="margin-bottom: 20px;">添加商品</button>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th>商品名称</th>
+              <th>商品描述</th>
+              <th>商品库存</th>
+              <th>商品尺寸</th>
+              <th>商品状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 模板 -->
+          </tbody>
+        </table>
+      </div>
+      <!-- 分页组件的结构 -->
+      <ul id="page"></ul>
     </div>
   </div>
 
-  <!-- 登录退出的模态框,  配置 data-dismiss="modal" 可以关闭模态框 -->
-  <div class="modal fade" id="logoutModal">
-    <div class="modal-dialog modal-sm">
+  <!-- 添加商品模态框 -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="productModal">
+    <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-          <h4 class="modal-title">温馨提示</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">添加商品</h4>
         </div>
         <div class="modal-body">
-          <p class="red"><i class="glyphicon glyphicon-info-sign"></i>您确定要退出后台管理系统吗？</p>
+          <form id="form">
+            <div class="form-group">
+              <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropDown" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="true">
+                  <span class="selectText">请选择二级分类</span>
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <!-- 模板 -->
+                </ul>
+              </div>
+              <!-- 上传文件时添加隐藏域 -->
+              <input type="hidden" name="brandId" id="">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="" name="proName" placeholder="请输入商品名称">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="" name="proDesc" placeholder="请输入商品描述">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="" name="num" placeholder="请输入商品库存">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="" name="size" placeholder="请输入商品尺码">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="" name="oldPrice" placeholder="请输入商品原价">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="" name="price" placeholder="请输入商品现价">
+              <input type="hidden" class="form-control" value="1" name="statu" placeholder="请输入商品现价">
+            </div>
+            <div class="form-group">
+              <label for="fileupload" class="btn btn-default">文件上传</label>
+              <!-- fileupload文件上传结构 name为上传的键 data-url为上传的地址 multiple为多文件上传 -->
+              <input type="file" id="fileupload" name="pic1" data-url="/product/addProductPic" multiple style="display: none;">
+              <div class="imgBox"></div>
+              <input type="hidden" name="picStatus">
+            </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" id="logoutBtn">退出</button>
+          <!-- 表单外面的按钮，通过form属性的值为表单元素，与表单进行关联 -->
+          <button type="submit" class="btn btn-primary" form="form">确认</button>
         </div>
-      </div>
-    </div>
-  </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <script type="text/html" id="productTpl">
+    {{each rows}}
+    <tr>						
+      <td>{{$index+1+(page-1)*size}}</td>
+      <td>{{$value.proName}}</td>
+      <td>{{$value.proDesc}}</td>
+      <td>{{$value.num}}</td>
+      <td>{{$value.size}}</td>
+      <td>{{$value.statu==1?"已上架":"已下架"}}</td>
+      <td>
+        {{if $value.statu === 1}}
+        <button class="btn btn-danger">下架</button>
+        {{else if $value.statu === 0}}
+        <button class="btn btn-danger">上架</button>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </script>
+
+  <script type="text/html" id="firstCategoryTpl">
+    {{each rows}}
+    <li><a href="#" data-id="{{$value.id}}">{{$value.categoryName}}</a></li>
+    {{/each}}
+  </script>
+
 
   <script src="./lib/jquery/jquery.min.js"></script>
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="./lib/nprogress/nprogress.js"></script>
+  <script src="./lib/artTemplate/template-web.js"></script>
+  <script src="./lib/bootstrap-paginator/bootstrap-paginator.min.js"></script>
+  <script src="./lib/jquery-fileupload/jquery.ui.widget.js"></script>
+  <script src="./lib/jquery-fileupload/jquery.fileupload.js"></script>
+  <script src="./lib/bootstrap-validator/js/bootstrapValidator.min.js"></script>
   <script src="./js/common.js"></script>
+  <script src="./js/product.js"></script>
 </body>
 
 </html>
