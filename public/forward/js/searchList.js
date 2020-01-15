@@ -11,7 +11,6 @@ $(function () {
       },
       beforeSend: function () {
         $('.lt_product ul').html('<div class="loading"></div>');
-        $('.loading').show();
       },
       success: function (res) {
         setTimeout(function () {
@@ -87,7 +86,6 @@ $(function () {
       beforeSend: function () {
         // 发送请求前做动画
         $('.lt_product ul').html('<div class="loading"></div>');
-        $('.loading').show();
       },
       success: function (res) {
         setTimeout(function () {

@@ -96,7 +96,6 @@
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
   animation: load 1s linear infinite;
-  display: none;
 }
 @keyframes load{
   from{
