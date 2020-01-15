@@ -16,54 +16,57 @@ $(function () {
   // 2.浏览器关闭数据删除
   // 3.多个页面下数据不可以共享
 
-  // 1.一进入页面，获取本地存储localStorage中的serch_list的数据
-  var historyStr = localStorage.getItem("search_list") || '[]';
-  // 将获取的数据转成数组
+  // 1.一进入页面，获取本地存储的数据进行数据渲染
+  var historyStr = localStorage.getItem('search_list') || '[]';
+  //将数据解析成数组
   var historyArr = JSON.parse(historyStr);
-  // 通过模板引擎进行渲染
-  var htmlStr = template("searchTpl", { arr: historyArr });
+  // 通过模板引擎进行数据渲染
+  var htmlStr = template("historyTpl", {
+    arr: historyArr
+  });
   $(".history").html(htmlStr);
 
-  // 2.点击搜索按钮将数据存储在localStorage中，并且重新渲染数据
+  // 2.点击搜索按钮，将文本框的值添加到本地存储中，进行数据渲染
   $(".search_right").on("click", function () {
     // 获取文本框的值
-    var value = $(".search_left").val().trim()
-    if (!value) return;
-    // 要求1：要是文本框的值与记录的值有相同的，将记录中删除，然后添加到最前面
+    var value = $(".search_left").val().trim();
+    if (!value) {
+      mui.toast("请输入关键字");
+      return;
+    }
+    // 将数据存到本地储存当中
+    // 如果文本框的值与本地存储相同，需要把线添加的删掉然后加到最前面
     var index = historyArr.indexOf(value);
-    if (index !== -1) {
-      // 表示找到了相同的值
+    if (index != -1) {
       historyArr.splice(index, 1);
     }
-    // 要求2：要是记录的值大于10条，多余的删除
+    // 如果存储的数据超过了十个，需要把最后一个删掉
     if (historyArr.length >= 10) {
       historyArr.pop();
     }
-
-    // 将获取的值存在数组中
     historyArr.unshift(value);
-    // 将数据存在localStorage中
-    localStorage.setItem('search_list', JSON.stringify(historyArr));
-    // 通过模板引擎进行数据渲染
-    var htmlStr = template("searchTpl", { arr: historyArr });
+    localStorage.setItem("search_list", JSON.stringify(historyArr));
+    var htmlStr = template("historyTpl", { arr: historyArr });
     $(".history").html(htmlStr);
-    $(".search_left").val("");
+    $(".search_left").val('');
+
+    // 跳到列表页
+    location.href = "searchList.html?key=" + value;
   })
 
-  // 3.点击删除按钮删除单条数据
-  $(".history").on("click", '.clear', function () {
-    // 删除存储的那一项，在进行页面渲染
+  // 3.点击删除图标,删除对应的本地存储数据,进行模板渲染
+  $(".history").on("click", 'i', function () {
     historyArr.splice($(this).data('index'), 1);
-    localStorage.setItem('search_list', JSON.stringify(historyArr));
-    var htmlStr = template("searchTpl", { arr: historyArr });
+    localStorage.setItem("search_list", JSON.stringify(historyArr));
+    var htmlStr = template("historyTpl", { arr: historyArr });
     $(".history").html(htmlStr);
   })
 
-  // 4.点击清空记录，删除全部数据
-  $(".history").on("click", '.clear_all', function () {
-    historyArr = [];
+  // 4.点击按钮,清空数据,进行渲染
+  $(".clear_all").on("click", function () {
+    var historyArr = [];
     localStorage.removeItem("search_list");
-    var htmlStr = template("searchTpl", { arr: historyArr });
+    var htmlStr = template("historyTpl", { arr: historyArr });
     $(".history").html(htmlStr);
   })
 

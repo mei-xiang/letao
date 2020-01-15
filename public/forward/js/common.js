@@ -16,4 +16,19 @@ $(function () {
     deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
     bounce: true //是否启用回弹
   });
+  
 })
+
+// 根据url地址解析得到对象  params: ?key=1&name=pp
+function getObjByUrl() {
+  var obj = {};
+  var strUrl = decodeURI(location.search); //?key=1&name=pp
+  strUrl = strUrl.slice(1); //key=1&name=pp
+  var arr = strUrl.split("&"); //[key=1,name=pp]
+  arr.forEach(function (v, i) {
+    var key = v.split("=")[0];
+    var value = v.split("=")[1];
+    obj[key] = value;
+  })
+  return obj;
+}

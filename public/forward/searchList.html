@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./lib/mui/css/mui.min.css">
   <link rel="stylesheet" href="./lib/fa/css/font-awesome.min.css">
   <link rel="stylesheet" href="./css/commom.css">
-  <link rel="stylesheet" href="./css/search.css">
+  <link rel="stylesheet" href="./css/searchList.css">
 </head>
 
 <body>
@@ -17,18 +17,38 @@
     <!-- 头部区域 -->
     <div class="lt_header">
       <a href="javascript:window.history.back();" class="home"><i class="mui-icon mui-icon-back"></i></a>
-      <h4>搜索中心</h4>
+      <h4>商品列表</h4>
     </div>
     <!-- 内容区域 -->
     <div class="lt_main">
-      <div class="search">
-        <input type="text" class="search_left" placeholder="请输入搜索关键字">
-        <a href="#" class="search_right">搜索</a>
-      </div>
-      <div class="history">
-        <!-- 模板渲染 -->
+      <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+          <!--这里放置真实显示的DOM内容-->
+          <div class="search">
+            <input type="text" placeholder="请输入搜索关键字">
+            <button class="search_right">搜索</button>
+          </div>
 
+          <!-- 排序模块 -->
+          <div class="lt_sort clearFix">
+            <a href="#" data-sort="">上架时间 <i class="fa fa-angle-down"></i></a>
+            <a href="#" class="current" data-sort="price">价格 <i class="fa fa-angle-down"></i></a>
+            <a href="#" data-sort="num">库存 <i class="fa fa-angle-down"></i></a>
+            <a href="#" data-sort="">折扣 <i class="fa fa-angle-down"></i></a>
+          </div>
+
+          <!-- 产品模块 -->
+          <div class="lt_product">
+            <ul>
+              <!-- 模板渲染 -->
+              <div class="loading"></div>
+            </ul>
+          </div>
+        </div>
       </div>
+
+      <!-- 加载动画 -->
+
     </div>
     <!-- 底部区域 -->
     <div class="lt_footer">
@@ -61,29 +81,24 @@
     </div>
   </div>
 
-  <script type="text/html" id="historyTpl">
-    {{if arr.length===0}}
-    <p>没有更多数据了</p>
-    {{else}}
-    <div class="history_top">
-      <span>搜索历史</span>
-      <span class="clear_all"><i class="fa fa-trash"></i>清空记录</span>
-    </div>
-    <div class="history_content">
-      <ul>
-        {{each arr}}
-        <li><a href="searchList.html?key={{$value}}">{{$value}}</a><i class="mui-icon mui-icon-closeempty clear" data-index={{$index}}></i></li>
-        {{/each}}
-      </ul>
-    </div>
-    {{/if}}
+  <script type="text/html" id="productTpl">
+  {{each data}}
+    <li>
+      <a href="#">
+        <img src="{{$value.pic[0].picAddr}}" alt="">
+        <p>{{$value.proName}}</p>
+        <span>{{$value.price}}</span><span>{{$value.oldPrice}}</span>
+        <button type="button" class="mui-btn mui-btn-primary">立即购买</button>
+      </a>
+    </li>
+  {{/each}}
   </script>
 
   <script src="./lib/zepto/zepto.min.js"></script>
   <script src="./lib/mui/js/mui.js"></script>
   <script src="./lib/artTemplate/template-web.js"></script>
   <script src="./js/common.js"></script>
-  <script src="./js/search.js"></script>
+  <script src="./js/searchList.js"></script>
 </body>
 
 </html>
