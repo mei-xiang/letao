@@ -31,10 +31,10 @@
 
           <!-- 排序模块 -->
           <div class="lt_sort clearFix">
-            <a href="#" data-sort="">上架时间 <i class="fa fa-angle-down"></i></a>
-            <a href="#" class="current" data-sort="price">价格 <i class="fa fa-angle-down"></i></a>
+            <a href="#" data-sort="time">上架时间 <i class="fa fa-angle-down"></i></a>
+            <a href="#" data-sort="price">价格 <i class="fa fa-angle-down"></i></a>
             <a href="#" data-sort="num">库存 <i class="fa fa-angle-down"></i></a>
-            <a href="#" data-sort="">折扣 <i class="fa fa-angle-down"></i></a>
+            <a href="#" data-sort="zhe">折扣 <i class="fa fa-angle-down"></i></a>
           </div>
 
           <!-- 产品模块 -->
@@ -84,7 +84,7 @@
   <script type="text/html" id="productTpl">
   {{each data}}
     <li>
-      <a href="#">
+      <a href="./product.html?procuctId={{$value.id}}" data-id={{$value.id}}>
         <img src="{{$value.pic[0].picAddr}}" alt="">
         <p>{{$value.proName}}</p>
         <span>{{$value.price}}</span><span>{{$value.oldPrice}}</span>
