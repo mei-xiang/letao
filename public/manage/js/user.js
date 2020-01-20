@@ -1,97 +1,68 @@
-/**
- * Created by Jepson on 2018/4/7.
- */
-
-$(function() {
-
-  // 当前页
+$(function () {
   var currentPage = 1;
-  // 一页多少条
-  var pageSize = 5;
+  var id;
+  var isDelete;
 
-  // 1. 一进入页面, 进行渲染
-  render();
-
+  // 页面加载时发送请求获取数据
+  render(currentPage);
   function render() {
-    // 发送请求, 获取表格渲染的数据
     $.ajax({
       type: "get",
-      url: "/user/queryUser",
+      url: '/user/queryUser',
       data: {
-        page: currentPage,
-        pageSize: pageSize
+        page: currentPage || 1,
+        pageSize: 5
       },
-      success: function( info ) {
-        console.log( info );
-        // 参数2 必须是一个对象
-        // 在模板中可以任意使用对象中的属性
-        // isDelete 表示用户的启用状态, 1就是启用, 0就是禁用
-        var htmlStr = template( "tpl", info );
-        $('.lt_content tbody').html( htmlStr );
+      dataType: "json",
+      success: function (res) {
+        console.log(res);
+        // 拿到数据进行页面的渲染
+        var htmlStr = template("tpl", res);
+        // console.log(htmlStr);
+        $("tbody").html(htmlStr);
 
-
-        // 配置分页
-        $('#paginator').bootstrapPaginator({
-          // 指定bootstrap版本
-          bootstrapMajorVersion: 3,
-          // 当前页
-          currentPage: info.page,
-          // 总页数
-          totalPages: Math.ceil( info.total / info.size ),
-
-          // 当页面被点击时触发
-          onPageClicked: function( a, b, c, page ) {
-            // page 当前点击的页码
+        //分页组件的渲染
+        $("#page").bootstrapPaginator({
+          bootstrapMajorVersion: 3, //对应的bootstrap版本
+          currentPage: currentPage, //当前页数
+          totalPages: Math.ceil(res.total / res.size), //总页数
+          shouldShowPage: true,//是否显示该按钮
+          // useBootstrapTooltip: true,
+          //点击事件
+          onPageClicked: function (event, originalEvent, type, page) {
             currentPage = page;
-            // 调用 render 重新渲染页面
-            render();
+            // 业务处理
+            render(currentPage);
           }
         });
 
       }
-    });
+    })
   }
 
-
-  // 2. 通过事件委托给 按钮注册点击事件
-  $('.lt_content tbody').on("click", ".btn", function() {
-    console.log( "呵呵额" );
-    // 弹出模态框
-    $('#userModal').modal("show");
-
-    // 用户 id
-    var id = $(this).parent().data("id");
-    // 获取将来需要将用户置成什么状态
-    var isDelete = $(this).hasClass("btn-success") ? 1 : 0;
-    console.log( id );
-    console.log(isDelete);
-
-    // 先解绑, 再绑定事件, 可以保证只有一个事件绑定在 按钮上
-    $('#submitBtn').off("click").on("click", function() {
-
-      $.ajax({
-        type: "post",
-        url: "/user/updateUser",
-        data: {
-          id: id,
-          isDelete: isDelete
-        },
-        success: function( info ) {
-          console.log( info )
-          if ( info.success ) {
-            // 关闭模态框
-            $('#userModal').modal("hide");
-            // 重新渲染
-            render();
-          }
-        }
-      })
-
-
-    })
+  // 点击按钮，弹出模态框
+  $("tbody").on("click", ".btn", function () {
+    $("#statusModal").modal("show");
+    id = $(this).parent("td").data("id");
+    isDelete = $(this).hasClass("btn-danger") ? "0" : "1";
+    console.log(id,isDelete);
   })
 
-
-
-
+  // 点击确认按钮，发送ajax请求修改状态数据,关闭模态框，重新渲染数据
+  $("#statusBtn").on("click", function () {
+    $.ajax({
+      url: "/user/updateUser",
+      type: "post",
+      data: {
+        id: id,
+        isDelete: isDelete
+      },
+      dataType: "json",
+      success: function (res) {
+        console.log(res);
+        $("#statusModal").modal("hide");
+        render(currentPage);
+      }
+    })
+  })
 })

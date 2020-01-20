@@ -1,47 +1,34 @@
-/**
- * Created by Jepson on 2018/8/10.
- */
-
-$(function() {
-  // 区域滚动
-  // 1. 引包
-  // 2. 准备结构(不要忘了给父容器设置 position:relative)
-  // 3. 进行初始化
-
-
-  // mui实现的选择器, 可以生成mui实例, 就可以调用 mui实例的方法
-  mui('.mui-scroll-wrapper').scroll({
-    deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-    indicators: false //是否显示滚动条
-  });
-
+$(function () {
+  // 轮播图初始化
   //获得slider插件对象
   var gallery = mui('.mui-slider');
   gallery.slider({
-    interval: 5000 //自动轮播周期，若为0则不自动播放，默认为0；
+    interval: 1000//自动轮播周期，若为0则不自动播放，默认为0；
   });
 
-});
+  // 区域滚动初始化
+  mui('.mui-scroll-wrapper').scroll({
+    scrollY: true, //是否竖向滚动
+    scrollX: false, //是否横向滚动
+    startX: 0, //初始化时滚动至x
+    startY: 0, //初始化时滚动至y
+    indicators: false, //是否显示滚动条
+    deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+    bounce: true //是否启用回弹
+  });
+  
+})
 
-// 专门通过传递的参数, 可以解析出地址栏的参数值
-function getSearch( name ) {
-  var search = location.search; // ?name=pp&age=18&desc=%E5%B8%85
-
-  // 解码成中文
-  search = decodeURI( search ); // ?name=pp&age=18&desc=帅
-
-  // 将 ? 去掉
-  search = search.slice(1);  // name=pp&age=18&desc=帅
-
-  // 根据 & 进行切割
-  var arr = search.split( "&" );  // ["name=pp", "age=18", "desc=帅"]
+// 根据url地址解析得到对象  params: ?key=1&name=pp
+function getObjByUrl() {
   var obj = {};
-  arr.forEach(function( v, i ) {  // v 就是每一项, ["name=pp"]
+  var strUrl = decodeURI(location.search); //?key=1&name=pp
+  strUrl = strUrl.slice(1); //key=1&name=pp
+  var arr = strUrl.split("&"); //[key=1,name=pp]
+  arr.forEach(function (v, i) {
     var key = v.split("=")[0];
     var value = v.split("=")[1];
     obj[key] = value;
-  });
-  return obj[name];
+  })
+  return obj;
 }
-
-

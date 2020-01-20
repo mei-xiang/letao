@@ -1,38 +1,107 @@
-.lt_sort {
+.lt_main{
+  position: relative;
+}
+.search{
+  position: relative;
+  padding: 10px;
+}
+.search input{
+  width: 100%;
+  height: 34px;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  padding-left: 15px;
+  border: 1px solid #007AFF;
+  padding-right: 54px;
+}
+.search .search_right{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #007AFF;
+  text-align: center;
+  width: 54px;
+  height: 34px;
+  border-radius: 0 5px 5px 0;
+  color:#fff;
+  border: none;
+}
+
+/* 排序模块 */
+.lt_sort{
+  margin-top: 10px;
+  width: 100%;
+  background-color: #EEEEEE;
+}
+.lt_sort a{
+  width: 25%;
+  float: left;
+  text-align: center;
+  color: #666666;
+  font-size: 12px;
   height: 30px;
   line-height: 30px;
-  background-color: #EEEEEE;
-  font-size: 12px;
 }
-.lt_sort a {
-  float: left;
-  width: 25%;
-  color: #666;
+.lt_sort a.current{
+  color: orange;
+}
+
+/* 产品模块 */
+.lt_product{
+  padding: 10px;
   text-align: center;
 }
-.lt_sort a.current {
-  color: #FF8C00;
+.lt_product li{
+  float: left;
+  width: 48%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.lt_product li:nth-child(2n-1){
+  margin-right: 4%;
+}
+.lt_product li img{
+  width: 120px;
+  height: 120px;
+}
+.lt_product p:first-of-type{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 2; /** 显示的行数 **/
+  overflow: hidden;  /** 隐藏超出的内容 **/
 }
 
-.loading {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #069;
+.lt_product span:first-of-type{
+  color: red;
+}
+.lt_product span:last-of-type{
+  color: #8F8F94;
+  text-decoration: line-through;
+}
+.lt_product button{
+  margin-top: 10px;
+}
+
+.loading{
+  width: 60px;
+  height: 60px;
+  border: 3px solid blue;
   position: absolute;
+  top: 120px;
   left: 50%;
   transform: translateX(-50%);
-  top: 150px;
-  /* 使用动画: 动画名称 动画时间 动画次数 */
-  /* infinite 无限次 */
-  animation: rotate 1s infinite ease-in-out;
+  -webkit-transform: translateX(-50%);
+  animation: load 1s linear infinite;
 }
-
-/* 定义动画 */
-@keyframes rotate {
-  from {
-    transform: translateX(-50%) rotate(0deg);
+@keyframes load{
+  from{
+    transform: translateX(-50%) rotate(0);
   }
-  to {
+  to{
     transform: translateX(-50%) rotate(360deg);
   }
 }

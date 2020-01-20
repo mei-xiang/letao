@@ -1,36 +1,29 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
   <style>
-    .father {
+    div{
       width: 200px;
       height: 200px;
-      background-color: blue;
-      position: relative;
-    }
-    .son {
-      position: absolute;
       background-color: pink;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
+      display: none;
     }
-    /*
-      如果当前元素设置了宽高, 同时设置 left和right, 听 left 的
-                            同时设置 top 和 bottom, 听 top 的
-
-      如果当前元素没有设置宽高, 又同时设置了 left 和 right, 会将盒子拉伸
-    */
   </style>
 </head>
 <body>
-
-<div class="father">
-  <div class="son"></div>
-</div>
-
+  <button class="btn">点击</button>
+  <div></div>
+  <script src="./lib/jquery/jquery.min.js"></script>
+  <script>
+    $(function(){
+      $(".btn").on("click",function(){
+        $("div").fadeIn(2000).delay(4000).fadeOut(2000);
+      })
+    })
+  </script>
 </body>
 </html>

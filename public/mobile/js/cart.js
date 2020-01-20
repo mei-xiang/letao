@@ -1,135 +1,135 @@
-/**
- * Created by Jepson on 2018/8/13.
- */
-$(function() {
+$(function () {
+  // var currentPage = 1;
+  // var size = 2;
 
-
-  // 1. 进入页面, 发送ajax请求, 获取购物车列表, 进行渲染
-  function render() {
-    setTimeout(function() {
-      $.ajax({
-        type: "get",
-        url: "/cart/queryCart",
-        dataType: "json",
-        success: function( info ) {
-          console.log( info );
-          if ( info.error === 400 ) {
-            // 用户没登陆, 跳转到登录页, 在跳转时, 将页面地址拼接
-            location.href = "login.html?retUrl=" + location.href;
-            return;
-          }
-
-          // 用户已登录, 通过模板引擎渲染  (需要的是对象, 要将数组包装)
-          var htmlStr = template( "cartTpl" , { arr: info } );
-          $('.lt_main .mui-table-view').html( htmlStr );
-
-          // 关闭下拉刷新
-          mui(".mui-scroll-wrapper").pullRefresh().endPulldownToRefresh();
-        }
-      });
-    }, 500);
-  }
-
-  mui.init({
-    pullRefresh : {
-      container:".mui-scroll-wrapper",//下拉刷新容器标识
-      down : {
-        auto: true, // 加载自动下拉刷新一次
-        callback: function() {
-          console.log( "发送ajax请求, 进行页面刷新" );
-          render();
-        }
-      }
-    }
+  // 1.一进入页面发送请求，进行渲染
+  render(function (res) {
+    var htmlStr = template("cartTpl", {
+      item: res
+    });
+    $(".cart_box").html(htmlStr);
   });
-
-
-  // 2. 删除功能
-  //    (1) 点击事件绑定要通过事件委托绑定, 且要绑定 tap 事件
-  //    (2) 获取当前购物车 id
-  //    (3) 发送 ajax 请求进行删除
-  //    (4) 页面重新渲染
-  $('.lt_main').on("tap", ".btn_delete", function() {
-    // 获取 id
-    var id = $(this).data("id");
-
-    // 发送 ajax 请求
+  function render(callback) {
     $.ajax({
-      type: "get",
-      url: "/cart/deleteCart",
-      // 注意: 后台要求传递的数组, 虽然这里只删一个, 但是格式还是数组
-      data: {
-        id: [ id ]
-      },
-      dataType: "json",
-      success: function( info ) {
-        console.log( info );
-        if ( info.success ) {
-          // 页面重新渲染, 触发一次下拉刷新即可
-          mui(".mui-scroll-wrapper").pullRefresh().pulldownLoading();
+      type: 'get',
+      url: '/cart/queryCart',
+      dataType: 'json',
+      success: function (res) {
+        console.log(res);
+        if (res.error === 400) {
+          // 未登录，跳到登录页
+          location.href = "login.html?retUrl=" + location.href;
+        } else {
+          // 登录成功
+          // 结核模板引擎进行数据渲染
+          callback && callback(res);
         }
       }
     })
+  }
+  // 2.下拉刷新
+  mui.init({
+    pullRefresh: {
+      container: ".mui-scroll-wrapper",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+      down: {
+        height: 50,//可选,默认50.触发下拉刷新拖动距离,
+        auto: false,//可选,默认false.首次加载自动下拉刷新一次
+        contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+        contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+        contentrefresh: "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+        callback: function () {
+          render(function (res) {
+            var htmlStr = template("cartTpl", {
+              item: res
+            });
+            $(".cart_box").html(htmlStr);
+            // 数据拿到后，结束下拉刷新
+            mui(".mui-scroll-wrapper").pullRefresh().endPulldownToRefresh();
+          });
+        } //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+      }
+      // ,up : { // 下拉加载是当前页+1，并且是在原数据是追加append。这里接口灭有分页实现不了上拉加载
+      //   height:50,//可选.默认50.触发上拉加载拖动距离
+      //   auto:false,//可选,默认false.自动上拉加载一次
+      //   contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+      //   contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+      //   callback :function(){
 
+      //   } //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+      // }
+    }
   });
 
+  // 3.点击删除按钮，发送请求删除数据，重新渲染
+  $(".lt_main").on("tap", '.btn_del', function () {
+    var id = $(this).data('id');
+    $.ajax({
+      type: 'get',
+      url: '/cart/deleteCart',
+      data: {
+        id: id
+      },
+      dataType: 'json',
+      success: function (res) {
+        if (res.success) {
+          render(function (res) {
+            var htmlStr = template("cartTpl", {
+              item: res
+            });
+            $(".cart_box").html(htmlStr);
+          });
+        }
+      }
+    })
+  })
 
-  // 3. 编辑功能
-  //    点击编辑按钮, 显示确认框
-  $('.lt_main').on("tap", ".btn_edit", function() {
-
-    // 自定义属性 dataset, dom对象的属性
+  // 4.点击修改按钮,进行尺码和数量的渲染，发送请求，重新渲染数据
+  $(".lt_main").on("tap", '.btn_edit', function () {
+    // 使用H5提供的获取自定义属性  对象.dataset 可以获取对象
     var obj = this.dataset;
-    // 从自定义属性中获取 id
-    var id = obj.id;
-
-    console.log( obj )
-
-    var htmlStr = template( "editTpl", obj );
-    // 换行 \n, mui 会将所有 \n 解析成 br 标签进行换行
-    // 我们需要在传递给 确认框前, 将所有的 \n 去掉
-    htmlStr = htmlStr.replace( /\n/g, "" );
-
-    // 显示确认框
-    mui.confirm( htmlStr, "编辑商品", ["确认", "取消"], function( e ) {
-
-      if ( e.index === 0 ) {
-        // 确认编辑
-        // 获取尺码和数量, 进行提交
-        var size = $('.lt_size span.current').text();
-        var num = $('.mui-numbox-input').val();
-
+    console.log(obj);
+    var htmlStr = template("editTpl", obj);
+    // mui框架在使用模板时会自动将/n转成br，需要手动清除
+    htmlStr = htmlStr.replace(/\n/g, "");
+    mui.confirm(htmlStr, "编辑商品", ["确认", "取消"], function (e) {
+      if (e.index === 0) {
+        // alert("确认");
+        // 获取id size num 发送ajax请求修改数据，页面重新渲染
+        var id = $(this).data('id');
+        var size = $(".lt_size span.current").text();
+        var num = $(".lt_num .mui-numbox-input").val();
         $.ajax({
-          type: "post",
-          url: "/cart/updateCart",
+          type: 'post',
+          url: '/cart/updateCart',
           data: {
             id: id,
             size: size,
             num: num
           },
           dataType: "json",
-          success: function( info ) {
-            console.log( info );
-            if ( info.success ) {
-              // 编辑成功, 页面重新, 下拉刷新一次即可
-              mui(".mui-scroll-wrapper").pullRefresh().pulldownLoading();
+          success: function(res){
+            console.log(res);
+            if(res.success){
+              render(function(res){
+                var htmlStr = template("cartTpl", {
+                  item: res
+                });
+                $(".cart_box").html(htmlStr);
+              });
             }
           }
         })
-
-
       }
-    });
-
-    // 手动初始化数字框
+      if (e.index === 1) {
+        // alert("取消");
+      }
+    }.bind(this));
+    // 初始化数字输入框组件
     mui(".mui-numbox").numbox();
-
   })
 
-
-  // 给编辑模态框的尺码添加选中功能
-  $('body').on("click", ".lt_size span", function() {
+  // 5.注册span的点击事件
+  $("body").on("click",".lt_size span",function(){
     $(this).addClass("current").siblings().removeClass("current");
-  });
-
-});
+  })
+})
